@@ -1,1 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verification Site</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      color: #333;
+    }
+
+    #banner {
+      background: linear-gradient(45deg, #ff6b6b, #ffa500);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+      width: 85%;
+      max-width: 650px;
+      font-size: 1.4em;
+      position: relative;
+      overflow: hidden;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      to {
+        box-shadow: 0 8px 16px rgba(255, 255, 255, 0.4);
+      }
+    }
+
+    #verifyBtn {
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      font-size: 1.2em;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      margin-top: 10px;
+    }
+
+    #verifyBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 25px;
+      border-radius: 20px;
+      max-width: 700px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(45deg, #ff5f6d, #ffc371);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: white;
+      font-size: 1.2em;
+      transition: transform 0.3s ease;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      transform: rotate(45deg);
+    }
+
+    .option-btn {
+      margin: 15px;
+      padding: 18px 30px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      background: linear-gradient(45deg, #f093fb, #f5576c);
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .option-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    #timer {
+      font-size: 1.4em;
+      margin: 20px 0;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    #message {
+      margin-bottom: 20px;
+      color: #34495e;
+    }
+
+    #videoContainer {
+      display: none;
+      margin: 20px 0;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 640px;
+      height: 360px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      background: black;
+    }
+
+    #videoContainer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 799px) and (max-height: 599px) {
+      #banner {
+        font-size: 1.1em;
+        padding: 20px;
+      }
+
+      #verifyBtn {
+        font-size: 1em;
+        padding: 15px 30px;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="banner">
+    Welcome to our verification platform. A sleek and secure way to confirm your humanity.
+  </div>
+  <button id="verifyBtn">Click me to verify</button>
+
+  <div id="adModal" class="modal">
+    <div class="modal-content">
+      <button id="closeAd" class="close-btn" title="Close">&times;</button>
+      <h2 style="color: #e74c3c;">Advertisement!</h2>
+      <p style="color: #7f8c8d;">This is a sponsored ad. Discover amazing products for your lifestyle.</p>
+      <p style="color: #34495e;">Thank you for your attention and happy viewing!</p>
+    </div>
+  </div>
+
+  <div id="choiceModal" class="modal">
+    <div class="modal-content">
+      <button id="closeChoice" class="close-btn" title="Close">&times;</button>
+      <h2 style="color: #2ecc71;">Choose Your Verification Method</h2>
+      <div>
+        <button id="watchAdBtn" class="option-btn">Watch a Video Ad</button>
+        <button id="visitBtn" class="option-btn">Visit Another Website</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="actionModal" class="modal">
+    <div class="modal-content">
+      <div id="videoContainer">
+        <iframe
+          id="videoIframe"
+          src=""
+          title="Advertisement Video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+      <p id="message" style="color: #3498db;"></p>
+      <span id="timer"></span>
+    </div>
+  </div>
+
+  <script>
+    let clickCount = 0;
+    let timerInterval;
+
+    const verifyBtn = document.getElementById('verifyBtn');
+    const adModal = document.getElementById('adModal');
+    const choiceModal = document.getElementById('choiceModal');
+    const actionModal = document.getElementById('actionModal');
+    const timerDisplay = document.getElementById('timer');
+    const message = document.getElementById('message');
+    const videoContainer = document.getElementById('videoContainer');
+    const videoIframe = document.getElementById('videoIframe');
+
+    function showModal(modal) {
+      modal.style.display = 'flex';
+    }
+
+    function hideModal(modal) {
+      modal.style.display = 'none';
+      clearInterval(timerInterval);
+      videoContainer.style.display = 'none';
+      videoIframe.src = '';
+      timerDisplay.textContent = '';
+      message.textContent = '';
+    }
+
+    function startTimer(seconds, callback) {
+      let remaining = seconds;
+      updateTimer(remaining);
+      timerInterval = setInterval(() => {
+        remaining--;
+        updateTimer(remaining);
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          callback();
+        }
+      }, 1000);
+    }
+
+    function updateTimer(seconds) {
+      timerDisplay.textContent = `Time remaining: ${seconds} seconds`;
+    }
+
+    verifyBtn.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount % 3 === 0) {
+        showModal(adModal);
+      }
+      showModal(choiceModal);
+    });
+
+    document.getElementById('closeAd').addEventListener('click', () => hideModal(adModal));
+    document.getElementById('closeChoice').addEventListener('click', () => hideModal(choiceModal));
+
+    document.getElementById('watchAdBtn').addEventListener('click', () => {
+      hideModal(choiceModal);
+      showModal(actionModal);
+      videoContainer.style.display = 'block';
+      // Embed the YouTube video with autoplay enabled
+      videoIframe.src =
+        'https://www.youtube.com/embed/cqjavar4A7w?autoplay=1&controls=1&rel=0&modestbranding=1';
+      message.textContent = 'Watching a video advertisement... Please wait.';
+      startTimer(30, () => {
+        window.location.href = 'https://www.google.com';
+      });
+    });
+
+    document.getElementById('visitBtn').addEventListener('click', () => {
+      hideModal(choiceModal);
+      showModal(actionModal);
+      videoContainer.style.display = 'none';
+      videoIframe.src = '';
+      message.textContent = 'Redirecting to another website for verification... Please wait.';
+      startTimer(60, () => {
+        window.location.href = 'https://www.google.com';
+      });
+    });
+  </script>
+</body>
+</html>
 
